@@ -11,7 +11,7 @@ export default (state = initialState, action) => {
         case ADD_TO_CART:
             const addedProduct = action.product
             const productPrice = addedProduct.price
-            const prodTitle = addedProduct.title
+            const productTitle = addedProduct.title
 
             let updateOrNewCartItem
 
