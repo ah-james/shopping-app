@@ -1,9 +1,11 @@
 import React from 'react'
-import { ScrollView, StyleSheet, FlatList } from 'react-native'
+import { ScrollView, StyleSheet, FlatList, Platform } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
+import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
 import ProductItem from '../../components/shop/ProductCard'
 import * as cartActions from '../../store/actions/cartActions'
+import CustomHeaderButton from '../../components/UI/CustomHeaderButton'
 
 const ProductsOverviewContainer = props => {
     const products = useSelector(state => state.products.availableProducts)
@@ -36,7 +38,10 @@ const ProductsOverviewContainer = props => {
 }
 
 ProductsOverviewContainer.navigationOptions = {
-    headerTitle: 'All Products'
+    headerTitle: 'All Products',
+    headerRight: <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item title='Cart' iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} onPress={() => {}} />
+    </HeaderButtons>
 }
 
 const styles = StyleSheet.create({
