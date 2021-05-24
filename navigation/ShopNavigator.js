@@ -3,10 +3,12 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { Platform } from 'react-native'
 
 import ProductsOverviewContainer from '../containers/shop/ProductsOverviewContainer'
+import ProductDetailContainer from '../containers/shop/ProductDetailContainer'
 import Colors from '../constants/Colors'
 
 const ShopNavigator = createStackNavigator({
     ProductsOverview: ProductsOverviewContainer,
+    ProductDetail: ProductDetailContainer,
 }, {
     defaultNavigationOptions: {
         headerStyle: {
