@@ -12,6 +12,7 @@ import CartContainer from '../containers/shop/CartContainer'
 import Colors from '../constants/Colors'
 import OrdersContainer from '../containers/shop/OrdersContainer'
 import UserProductsContainer from '../containers/user/UserProductsContainer'
+import EditProductContainer from '../containers/user/EditProductContainer'
 
 const defaultNavOptions = {
     headerStyle: {
@@ -47,7 +48,8 @@ const OrdersNavigator = createStackNavigator({
 })
 
 const UserNavigator = createStackNavigator({
-    UserProducts: UserProductsContainer
+    UserProducts: UserProductsContainer,
+    EditProduct: EditProductContainer
 }, {
     navigationOptions: {
         drawerIcon: drawerConfig => <Ionicons name={Platform.OS === 'android' ? 'md-create' : 'ios-create'} size={20} color={drawerConfig.tintColor} />

@@ -30,7 +30,7 @@ const CartContainer = props => {
         <View style={styles.screen}>
             <View style={styles.summary}>
                 <Text style={styles.summaryText}>
-                    Total: <Text style={styles.sum}>${cartSum.toFixed(2)}</Text>
+                    Total: <Text style={styles.sum}>${Math.round(cartSum.toFixed(2) * 100) / 100}</Text>
                 </Text>
                 <Button title="Order Now" color={Colors.secondaryColor} disabled={cartItems.length === 0} onPress={() => { dispatch(ordersActions.addOrder(cartItems, cartSum))}} />
             </View>
