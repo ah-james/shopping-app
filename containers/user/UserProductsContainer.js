@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Platform, Button } from 'react-native'
+import { FlatList, Platform, Button, Alert } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
@@ -18,6 +18,13 @@ const UserProductsContainer = props => {
         }})
     }
 
+    const handleDelete = id => {
+        Alert.alert('Are you sure?', 'Do you want to delete?', [
+            {text: 'No', style: 'default'},
+            {text: 'Yes', style: 'destructive', onPress: () => {dispatch(productsActions.deleteProduct(id))}}
+        ])
+    }
+
     return <FlatList data={userProducts} renderItem={itemData => (
         <ProductCard 
             image={itemData.item.imageUrl} 
@@ -26,7 +33,7 @@ const UserProductsContainer = props => {
             onSelect={() => handleEditProduct(itemData.item.id)} 
         >
             <Button color={Colors.secondaryColor} title="Edit" onPress={() => handleEditProduct(itemData.item.id)} />
-            <Button color={Colors.secondaryColor} title="Delete" onPress={() => {dispatch(productsActions.deleteProduct(itemData.item.id))}} />
+            <Button color={Colors.secondaryColor} title="Delete" onPress={() => handleDelete(itemData.item.id)} />
         </ProductCard> 
     )}/>
 }

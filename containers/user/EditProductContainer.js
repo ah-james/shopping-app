@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { View, Text, StyleSheet, ScrollView, TextInput, Platform } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, TextInput, Platform, Alert } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { useSelector, useDispatch } from 'react-redux' 
 
@@ -22,6 +22,7 @@ const EditProductContainer = props => {
         } else {
             dispatch(productsActions.createProduct(title, imageUrl, description, +price))
         }
+        props.navigation.goBack()
     }, [dispatch, productId, title, description, imageUrl, price])
 
     useEffect(() => {
