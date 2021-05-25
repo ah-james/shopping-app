@@ -11,6 +11,7 @@ import ProductDetailContainer from '../containers/shop/ProductDetailContainer'
 import CartContainer from '../containers/shop/CartContainer'
 import Colors from '../constants/Colors'
 import OrdersContainer from '../containers/shop/OrdersContainer'
+import UserProductsContainer from '../containers/user/UserProductsContainer'
 
 const defaultNavOptions = {
     headerStyle: {
@@ -45,9 +46,19 @@ const OrdersNavigator = createStackNavigator({
     defaultNavigationOptions: defaultNavOptions,
 })
 
+const UserNavigator = createStackNavigator({
+    UserProducts: UserProductsContainer
+}, {
+    navigationOptions: {
+        drawerIcon: drawerConfig => <Ionicons name={Platform.OS === 'android' ? 'md-create' : 'ios-create'} size={20} color={drawerConfig.tintColor} />
+    },
+    defaultNavigationOptions: defaultNavOptions,
+})
+
 const ShopNavigator = createDrawerNavigator({
     Shop: ProductsNavigator,
     Orders: OrdersNavigator,
+    User: UserNavigator
 }, {
     contentOptions: {
         activeTintColor: Colors.primaryColor

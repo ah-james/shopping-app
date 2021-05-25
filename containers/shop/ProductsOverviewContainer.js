@@ -3,9 +3,10 @@ import { ScrollView, StyleSheet, FlatList, Platform } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
+import CustomHeaderButton from '../../components/UI/CustomHeaderButton'
 import ProductItem from '../../components/shop/ProductCard'
 import * as cartActions from '../../store/actions/cartActions'
-import CustomHeaderButton from '../../components/UI/CustomHeaderButton'
+
 
 const ProductsOverviewContainer = props => {
     const products = useSelector(state => state.products.availableProducts)
