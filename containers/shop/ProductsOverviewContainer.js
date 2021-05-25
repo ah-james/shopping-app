@@ -1,16 +1,24 @@
 import React from 'react'
-import { ScrollView, StyleSheet, FlatList, Platform } from 'react-native'
+import { ScrollView, StyleSheet, FlatList, Platform, Button } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton'
 import ProductItem from '../../components/shop/ProductCard'
 import * as cartActions from '../../store/actions/cartActions'
+import Colors from '../../constants/Colors'
 
 
 const ProductsOverviewContainer = props => {
     const products = useSelector(state => state.products.availableProducts)
     const dispatch = useDispatch()
+
+    const handleSelectItem = (id, title) => {
+        props.navigation.navigate({ routeName: 'ProductDetail', params: {
+            productId: id,
+            productTitle: title,
+        }})
+    }
 
     const addToCart = (itemData) => {
         dispatch(cartActions.addToCart(itemData.item))
@@ -23,16 +31,11 @@ const ProductsOverviewContainer = props => {
                     image={itemData.item.imageUrl} 
                     title={itemData.item.title} 
                     price={itemData.item.price} 
-                    viewDetail={() => {
-                        props.navigation.navigate({ routeName: 'ProductDetail', params: {
-                            productId: itemData.item.id,
-                            productTitle: itemData.item.title,
-                        }})
-                    }} 
-                    addToCart={() => {
-                        dispatch(cartActions.addToCart(itemData.item))
-                    }} 
-                />
+                    onSelect={() => {handleSelectItem(itemData.item.id, itemData.item.title)}} 
+                >
+                    <Button color={Colors.secondaryColor} title="View Details" onPress={() => handleSelectItem(itemData.item.id, itemData.item.title)} />
+                    <Button color={Colors.secondaryColor} title="Add to Cart" onPress={() => dispatch(cartActions.addToCart(itemData.item))} />
+                </ProductItem>
             }/>
         </ScrollView>
     )
