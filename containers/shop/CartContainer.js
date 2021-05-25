@@ -32,7 +32,7 @@ const CartContainer = props => {
                 <Text style={styles.summaryText}>
                     Total: <Text style={styles.sum}>${cartSum.toFixed(2)}</Text>
                 </Text>
-                <Button title="Order Now" color={Colors.secondaryColor} disabled={cartItems.length === 0} onPress={() => { dispatch(orderActions.addOrder(cartItems, cartSum))}} />
+                <Button title="Order Now" color={Colors.secondaryColor} disabled={cartItems.length === 0} onPress={() => { dispatch(ordersActions.addOrder(cartItems, cartSum))}} />
             </View>
             <FlatList 
                 data={cartItems} 
@@ -50,6 +50,10 @@ const CartContainer = props => {
             />
         </View>
     )
+}
+
+CartContainer.navigationOptions = {
+    headerTitle: 'Your Cart',
 }
 
 const styles = StyleSheet.create({
