@@ -41,10 +41,10 @@ const UserProductsContainer = props => {
 UserProductsContainer.navigationOptions = navData => {
     return {
         headerTitle: 'Your Products',
-        headerLeft: <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        headerLeft: () => <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
             <Item title="Menu" iconName={Platform.OS === 'android' ? 'md-menu' : 'ios-menu'} onPress={() => {navData.navigation.toggleDrawer()}} />
         </HeaderButtons>,
-        headerRight: <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        headerRight: () => <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
             <Item title="Add" iconName={Platform.OS === 'android' ? 'md-create' : 'ios-create'} onPress={() => {navData.navigation.navigate('EditProduct')}} />
         </HeaderButtons>,
     }
