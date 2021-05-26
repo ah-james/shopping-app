@@ -1,17 +1,35 @@
-import React from 'react'
-import { ScrollView, StyleSheet, FlatList, Platform, Button } from 'react-native'
+import React, { useEffect, useState, useCallback } from 'react'
+import { ScrollView, FlatList, Platform, Button, ActivityIndicator, View, StyleSheet, Text } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton'
 import ProductItem from '../../components/shop/ProductCard'
 import * as cartActions from '../../store/actions/cartActions'
+import * as productsActions from '../../store/actions/productsActions'
 import Colors from '../../constants/Colors'
 
 
 const ProductsOverviewContainer = props => {
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState()
     const products = useSelector(state => state.products.availableProducts)
     const dispatch = useDispatch()
+
+    const loadProducts = useCallback(async () => {
+        setError(null)
+        setIsLoading(true)
+        try {
+            await dispatch(productsActions.fetchProducts())
+        } catch (error) {
+            setError(error.message)
+        }
+        setIsLoading(false)
+    }, [dispatch, setIsLoading, setError])
+
+    useEffect(() => {
+        loadProducts()
+    }, [dispatch, loadProducts])
 
     const handleSelectItem = (id, title) => {
         props.navigation.navigate({ routeName: 'ProductDetail', params: {
@@ -22,6 +40,31 @@ const ProductsOverviewContainer = props => {
 
     const addToCart = (itemData) => {
         dispatch(cartActions.addToCart(itemData.item))
+    }
+
+    if (isLoading) {
+        return(
+            <View style={styles.center}>
+                <ActivityIndicator size='large' color={Colors.primaryColor} />
+            </View>
+        )
+    }
+
+    if (!isLoading && products.length === 0) {
+        return(
+            <View style={styles.center}>
+                <Text>No Products Found</Text>
+            </View>
+        )
+    }
+
+    if (error) {
+        return(
+            <View style={styles.center}>
+                <Text>Something Went Wrong</Text>
+                <Button title='Try Again' onPress={() => loadProducts} color={Colors.primaryColor} />
+            </View>
+        )
     }
 
     return( 
@@ -54,7 +97,11 @@ ProductsOverviewContainer.navigationOptions = navData => {
 }
 
 const styles = StyleSheet.create({
-
+    center: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 })
 
 export default ProductsOverviewContainer
