@@ -28,7 +28,12 @@ export const fetchProducts = () => {
 }
 
 export const deleteProduct = productId => {
-    return { type: DELETE_PRODUCT, productId: productId}
+    return async dispatch => {
+        await fetch(`https://rn-shopping-app-5e413-default-rtdb.firebaseio.com/products${productId}.json`, {
+            method: 'DELETE',
+        })
+        dispatch({ type: DELETE_PRODUCT, productId: productId})
+    }
 }
 
 export const createProduct = (title, imageUrl, description, price) => {
@@ -61,9 +66,24 @@ export const createProduct = (title, imageUrl, description, price) => {
 }
 
 export const updateProduct = (id, title, imageUrl, description) => {
-    return { type: UPDATE_PRODUCT, productId: id, productData: {
-        title,
-        imageUrl,
-        description,
-    }}
+    return async dispatch => {
+
+        await fetch(`https://rn-shopping-app-5e413-default-rtdb.firebaseio.com/products${id}.json`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                title,
+                description,
+                imageUrl,
+            })
+        })
+        
+        dispatch({ type: UPDATE_PRODUCT, productId: id, productData: {
+            title,
+            imageUrl,
+            description,
+        }})
+    }
 }
