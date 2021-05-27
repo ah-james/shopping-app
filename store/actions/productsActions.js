@@ -58,8 +58,6 @@ export const createProduct = (title, imageUrl, description, price) => {
 
         const responseData = await response.json()
 
-        console.log(responseData)
-
         dispatch({ type: CREATE_PRODUCT, productData: {
             id: responseData.name,
             title,
