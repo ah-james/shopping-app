@@ -44,7 +44,7 @@ const CartContainer = props => {
                 {isLoading ? (
                     <ActivityIndicator size='small' color={Colors.primaryColor} />
                 ) : (
-                    <Button title="Order Now" color={Colors.secondaryColor} disabled={cartItems.length === 0} onPress={() => {handleSendOrder}} />
+                    <Button title="Order Now" color={Colors.secondaryColor} disabled={cartItems.length === 0} onPress={handleSendOrder} />
                 )}
             </Card>
             <FlatList 
