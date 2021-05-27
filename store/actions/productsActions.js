@@ -29,9 +29,14 @@ export const fetchProducts = () => {
 
 export const deleteProduct = productId => {
     return async dispatch => {
-        await fetch(`https://rn-shopping-app-5e413-default-rtdb.firebaseio.com/products${productId}.json`, {
+        const response = await fetch(`https://rn-shopping-app-5e413-default-rtdb.firebaseio.com/products${productId}.json`, {
             method: 'DELETE',
         })
+
+        if (!response.ok) {
+            throw new Error('Something Went Wrong!')
+        }
+
         dispatch({ type: DELETE_PRODUCT, productId: productId})
     }
 }
@@ -68,7 +73,7 @@ export const createProduct = (title, imageUrl, description, price) => {
 export const updateProduct = (id, title, imageUrl, description) => {
     return async dispatch => {
 
-        await fetch(`https://rn-shopping-app-5e413-default-rtdb.firebaseio.com/products${id}.json`, {
+        const response = await fetch(`https://rn-shopping-app-5e413-default-rtdb.firebaseio.com/products${id}.json`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
@@ -79,6 +84,10 @@ export const updateProduct = (id, title, imageUrl, description) => {
                 imageUrl,
             })
         })
+
+        if (!response.ok) {
+            throw new Error('Something Went Wrong!')
+        }
         
         dispatch({ type: UPDATE_PRODUCT, productId: id, productData: {
             title,

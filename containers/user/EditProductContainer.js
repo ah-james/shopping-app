@@ -1,11 +1,12 @@
-import React, { useEffect, useCallback, useReducer } from 'react'
-import { View, StyleSheet, ScrollView, Platform, Alert, KeyboardAvoidingView } from 'react-native'
+import React, { useEffect, useCallback, useReducer, useState } from 'react'
+import { View, StyleSheet, ScrollView, Platform, Alert, KeyboardAvoidingView, ActivityIndicator } from 'react-native'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import { useSelector, useDispatch } from 'react-redux' 
 
 import CustomHeaderButton from '../../components/UI/CustomHeaderButton'
 import * as productsActions from '../../store/actions/productsActions'
 import Input from '../../components/UI/Input'
+import Colors from '../../constants/Colors'
 
 const FORM_UPDATE = 'FORM_UPDATE'
 
@@ -33,6 +34,9 @@ const formReducer = (state, action) => {
 }
 
 const EditProductContainer = props => {
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState()
+
     const productId = props.navigation.getParam('productId')
     const editedProduct = useSelector(state => 
         state.products.userProducts.find(product => product.id === productId)
@@ -55,19 +59,33 @@ const EditProductContainer = props => {
         formIsValid: editedProduct ? true : false,
     })
 
-    const handleSubmit = useCallback(() => {
+    useEffect(() => {
+        if (error) {
+            Alert.alert('An error occurred!', error, [{text: 'Okay'}])
+        }
+    }, [error])
+
+    const handleSubmit = useCallback(async () => {
         if (!formState.formIsValid) {
             Alert.alert('Fill out the Form!', 'Please check your errors in the form', [
                 { text: 'Okay' }
             ])
             return
         }
-        if (editedProduct) { 
-            dispatch(productsActions.updateProduct(productId, formState.inputValues.title, formState.inputValues.imageUrl, formState.inputValues.description))
-        } else {
-            dispatch(productsActions.createProduct(formState.inputValues.title, formState.inputValues.imageUrl, formState.inputValues.description, +formState.inputValues.price))
+        setIsLoading(true)
+        setError(null)
+        try {
+            if (editedProduct) { 
+                await dispatch(productsActions.updateProduct(productId, formState.inputValues.title, formState.inputValues.imageUrl, formState.inputValues.description))
+            } else {
+                await dispatch(productsActions.createProduct(formState.inputValues.title, formState.inputValues.imageUrl, formState.inputValues.description, +formState.inputValues.price))
+            }
+            props.navigation.goBack()
+        } catch (error) {
+            setError(error)
         }
-        props.navigation.goBack()
+        setIsLoading(false)
+        
     }, [dispatch, productId, formState])
 
     useEffect(() => {
@@ -83,6 +101,12 @@ const EditProductContainer = props => {
             input: inputIdentifier
         })
     }, [dispatchState])
+
+    if (isLoading) {
+        return(
+            <View><ActivityIndicator style={styles.center} size="large" color={Colors.primaryColor} /></View>
+        )
+    }
 
     return(
         <KeyboardAvoidingView style={{flex: 1}} behavior="padding" keyboardVerticalOffset={100}>
@@ -151,7 +175,11 @@ const styles = StyleSheet.create({
     form: {
         margin: 20,
     },
-
+    center: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    }
 })
 
 export default EditProductContainer
