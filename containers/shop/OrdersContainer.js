@@ -27,6 +27,14 @@ const OrdersContainer = props => {
         )
     }
 
+    if (orders.length === 0) {
+        return (
+            <View>
+                <Text style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>No Orders Found</Text>
+            </View>
+        )
+    }
+
     return(
         <FlatList data={orders} renderItem={itemData => <OrderCard items={itemData.item.items} totalAmount={itemData.item.totalAmount} date={itemData.item.readableDate} />} />
     )
