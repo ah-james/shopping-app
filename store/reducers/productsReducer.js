@@ -1,11 +1,10 @@
-import PRODUCTS from '../../data/dummy-data'
 import Product from '../../models/product'
 import { CREATE_PRODUCT, DELETE_PRODUCT, SET_PRODUCTS, UPDATE_PRODUCT } from '../actions/productsActions'
 
 const initialState = {
-    availableProducts: PRODUCTS,
+    availableProducts: [],
     // dummy setup of userProducts to hardcode for testing
-    userProducts: PRODUCTS.filter(product => product.ownerId === 'u1'),
+    userProducts: [],
 }
 
 export default (state = initialState, action) => {
@@ -13,7 +12,7 @@ export default (state = initialState, action) => {
         case SET_PRODUCTS:
             return {
                 availableProducts: action.products,
-                userProducts: action.products.filter(product => product.ownerId === 'u1'),
+                userProducts: action.userProducts
             }
         case DELETE_PRODUCT:
             return { 
@@ -24,7 +23,7 @@ export default (state = initialState, action) => {
         case CREATE_PRODUCT:
             const newProduct = new Product(
                 action.productData.id, 
-                'u1', 
+                action.productDdata.ownerId, 
                 action.productData.title, 
                 action.productData.imageUrl, 
                 action.productData.description, 
