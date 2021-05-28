@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback } from 'react'
+import React, { useReducer, useCallback, useState } from 'react'
 import { ScrollView, StyleSheet, KeyboardAvoidingView, Button, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useDispatch } from 'react-redux'
@@ -34,7 +34,7 @@ const formReducer = (state, action) => {
 }
 
 const AuthContainer = props => {
-
+    const [isSignup, setIsSignup] = useState(false)
     const [formState, dispatchState] = useReducer(formReducer, {
         inputValues: {
             email: '',
@@ -49,8 +49,12 @@ const AuthContainer = props => {
 
     const dispatch = useDispatch()
 
-    const handleSignup = () => {
-        dispatch(authActions.signup(formState.inputValues.email, formState.inputValues.password))
+    const handleAuth = () => {
+        if (isSignup) {
+            dispatch(authActions.signup(formState.inputValues.email, formState.inputValues.password))
+        } else {
+            dispatch(authActions.login(formState.inputValues.email, formState.inputValues.password))
+        }
     }
 
     const handleInputChange = useCallback(
@@ -64,7 +68,7 @@ const AuthContainer = props => {
     }, [dispatchState])
 
     return(
-        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50} style={styles.screen}>
+        // <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={10} style={styles.screen}>
             <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient} >
                 <Card style={styles.authContainer}>
                     <ScrollView>
@@ -92,15 +96,17 @@ const AuthContainer = props => {
                             initialValue="" 
                         />
                         <View style={styles.buttonContainer}>
-                            <Button title="Login" color={Colors.primaryColor} onPress={handleSignup} />
+                            <Button title={isSignup ? 'Sign Up' : "Login"} color={Colors.primaryColor} onPress={handleAuth} />
                         </View>
                         <View style={styles.buttonContainer}>
-                            <Button title="Sign Up" color={Colors.secondaryColor} onPress={() => {}} />
+                            <Button title={`Switch to ${isSignup ? 'Login' : 'Sign Up'}`} color={Colors.secondaryColor} onPress={() => {
+                                setIsSignup(prevState => !prevState)
+                            }} />
                         </View>
                     </ScrollView>
                 </Card>
             </LinearGradient>
-        </KeyboardAvoidingView>
+        // </KeyboardAvoidingView>
     )
 }
 
