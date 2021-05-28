@@ -1,5 +1,5 @@
-import React, { useReducer, useCallback, useState } from 'react'
-import { ScrollView, StyleSheet, KeyboardAvoidingView, Button, View } from 'react-native'
+import React, { useReducer, useCallback, useState, useEffect } from 'react'
+import { ScrollView, StyleSheet, KeyboardAvoidingView, Button, View, ActivityIndicator, Alert } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useDispatch } from 'react-redux'
 
@@ -34,7 +34,9 @@ const formReducer = (state, action) => {
 }
 
 const AuthContainer = props => {
+    const [isLoading, setIsLoading] = useState(false)
     const [isSignup, setIsSignup] = useState(false)
+    const [error, setError] = useState()
     const [formState, dispatchState] = useReducer(formReducer, {
         inputValues: {
             email: '',
@@ -49,11 +51,27 @@ const AuthContainer = props => {
 
     const dispatch = useDispatch()
 
-    const handleAuth = () => {
+    useEffect(() => {
+        if (error) {
+            Alert.alert('An Error Occurred', error, [{ text: 'Okay' }])
+        }
+    }, [error])
+
+    const handleAuth = async () => {
+        let action
         if (isSignup) {
-            dispatch(authActions.signup(formState.inputValues.email, formState.inputValues.password))
+            action = authActions.signup(formState.inputValues.email, formState.inputValues.password)
         } else {
-            dispatch(authActions.login(formState.inputValues.email, formState.inputValues.password))
+            action = authActions.login(formState.inputValues.email, formState.inputValues.password)
+        }
+        setError(null)
+        setIsLoading(true)
+        try {
+            await dispatch(action)
+            props.navigation.navigate('Shop')
+        } catch (error) {
+            setError(error.message)
+            setIsLoading(false)
         }
     }
 
@@ -96,7 +114,7 @@ const AuthContainer = props => {
                             initialValue="" 
                         />
                         <View style={styles.buttonContainer}>
-                            <Button title={isSignup ? 'Sign Up' : "Login"} color={Colors.primaryColor} onPress={handleAuth} />
+                            {isLoading ? <ActivityIndicator size='small' color={Colors.primaryColor} /> : <Button title={isSignup ? 'Sign Up' : "Login"} color={Colors.primaryColor} onPress={handleAuth} />}
                         </View>
                         <View style={styles.buttonContainer}>
                             <Button title={`Switch to ${isSignup ? 'Login' : 'Sign Up'}`} color={Colors.secondaryColor} onPress={() => {
